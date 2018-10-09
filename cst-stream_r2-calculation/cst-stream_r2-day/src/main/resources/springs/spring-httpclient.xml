@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/context
+  http://www.springframework.org/schema/context/spring-context.xsd
+  http://www.springframework.org/schema/beans
+  http://www.springframework.org/schema/beans/spring-beans.xsd
+  http://www.springframework.org/schema/mvc "
+       default-autowire="byName">
+    <bean id="httpClientConnectionManager"
+          class="org.apache.http.impl.conn.PoolingHttpClientConnectionManager"
+          destroy-method="close">
+        <!-- 最大连接数 -->
+        <property name="maxTotal" value="200" />
+
+        <!-- 设置每个主机地址的并发数 -->
+        <property name="defaultMaxPerRoute" value="50" />
+    </bean>
+
+    <!-- httpclient对象构建器 -->
+    <bean id="httpClientBuilder" class="org.apache.http.impl.client.HttpClientBuilder">
+        <!-- 设置连接管理器 -->
+        <property name="connectionManager" ref="httpClientConnectionManager" />
+    </bean>
+
+    <!-- 定义Httpclient对象 -->
+    <bean id="httpClient" class="org.apache.http.impl.client.CloseableHttpClient"
+          factory-bean="httpClientBuilder" factory-method="build" scope="prototype">
+    </bean>
+
+    <!-- 定义清理无效连接 -->
+    <bean class="cst.jstorm.commons.utils.http.EcConmanagerDestory"
+          destroy-method="shutdown">
+        <constructor-arg index="0" ref="httpClientConnectionManager" />
+    </bean>
+
+    <bean id="requestConfigBuilder" class="org.apache.http.client.config.RequestConfig.Builder">
+        <!-- 创建连接的最长时间 -->
+        <property name="connectTimeout" value="2000"/>
+        <!-- 从连接池中获取到连接的最长时间 -->
+        <property name="connectionRequestTimeout" value="500"/>
+        <!-- 数据传输的最长时间 -->
+        <property name="socketTimeout" value="6000"/>
+
+    </bean>
+    <!-- 定义请求参数 -->
+    <bean id="requestConfig" class="org.apache.http.client.config.RequestConfig" factory-bean="requestConfigBuilder" factory-method="build">
+    </bean>
+
+    <bean id="httpUtils" class="cst.jstorm.commons.utils.http.HttpUtils">
+        <constructor-arg index="0" ref="httpClient" />
+        <constructor-arg index="1" ref="requestConfig" />
+    </bean>
+
+</beans>

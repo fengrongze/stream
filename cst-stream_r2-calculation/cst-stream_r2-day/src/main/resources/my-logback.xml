@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--私人订制-->
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+
+    <!--时间戳字符串   设置将当前时间（解析配置文件的时间）转换为字符串的模式-->
+    <timestamp key="defaultDatePattern" value="yyyy-MM-dd HH:mm:ss:SSS"/>
+    <property resource="log.properties"></property>
+    <property name="user" value="user1"></property>
+    <property name="USER_LOGS" value="logs"></property>
+
+    <!-- 负责写控制台日志 -->
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <Pattern>${defaultPattern}</Pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+    <!-- 文件日志 -->
+    <appender name="debug" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--接入pinpoint 如果没有为logutil-->
+        <file>
+            ${logger.root:-/home}/${USER_LOGS}/${app.name}/${logger.debug.child:-debug}/${pinpoint.applicationName:-logutil}-debug.log
+        </file>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>
+                ${logger.root:-/home}/${USER_LOGS}/${app.name}/${logger.debug.child:-debug}/${pinpoint.applicationName:-logutil}-debug.%d{yyyy-MM-dd}.%i.log.gz
+            </fileNamePattern>
+            <maxHistory>${log.debug.maxHistory:-20}</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>${log.debug.maxFile:-50MB}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${defaultPattern}</pattern>
+            <charset>${log.charset}</charset>
+        </encoder>
+    </appender>
+    <appender name="info" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>
+            ${logger.root:-/home}/${USER_LOGS}/${app.name}/${logger.info.child:-info}/${pinpoint.applicationName:-logutil}-info.log
+        </file>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>
+                ${logger.root:-/home}/${USER_LOGS}/${app.name}/${logger.info.child:-info}/${pinpoint.applicationName:-logutil}-info.%d{yyyy-MM-dd}.%i.log.gz
+            </fileNamePattern>
+            <maxHistory>${log.info.maxHistory:-30}</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>${log.info.maxFile:-100MB}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${defaultPattern}</pattern>
+            <charset>${log.charset}</charset>
+        </encoder>
+    </appender>
+    <!--可以设置总日志存储，等于或高于info的将被记录，否则被过滤掉-->
+    <appender name="info_upper" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>
+            ${logger.root:-/home}/${USER_LOGS}/${app.name}/${logger.info.upper.child:-infoupper}/${pinpoint.applicationName:-logutil}-info_upper.log
+        </file>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>
+                ${logger.root:-/home}/${USER_LOGS}/${app.name}/${logger.info.upper.child:-infoupper}/${pinpoint.applicationName:-logutil}-info_upper.%d{yyyy-MM-dd}.%i.log.gz
+            </fileNamePattern>
+            <maxHistory>${log.info.upper.maxHistory:-30}</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>${log.info.upper.maxFile:-200MB}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${defaultPattern}</pattern>
+            <charset>${log.charset}</charset>
+        </encoder>
+    </appender>
+    <!-- 异常日志输出-->
+    <appender name="exception" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>
+            ${logger.root:-/home}/${USER_LOGS}/${app.name}/${logger.exception.child:-exception}/${pinpoint.applicationName:-logutil}-exception.log
+        </file>
+        <!--求值过滤器，评估、鉴别日志是否符合指定条件. 需要额外的两个JAR包，commons-compiler.jar和janino.jar -->
+        <filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+            <!--默认为 ch.qos.logback.classic.boolex.JaninoEventEvaluator-->
+            <evaluator>
+                <!--过滤掉所有日志消息中不包含"Exception"字符串的日志-->
+                <expression>return message.contains("Exception");</expression>
+            </evaluator>
+            <OnMatch>ACCEPT</OnMatch>
+            <OnMismatch>DENY</OnMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>
+                ${logger.root:-/home}/${USER_LOGS}/${app.name}/${logger.exception.child:-exception}/${pinpoint.applicationName:-logutil}-exception.%d{yyyy-MM-dd}.%i.log.gz
+            </fileNamePattern>
+            <maxHistory>${log.exception.maxHistory:-10}</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>${log.exception.maxFile:-30MB}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${defaultPattern}</pattern>
+            <charset>${log.charset}</charset>
+        </encoder>
+    </appender>
+
+    <appender name="warn" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>
+            ${logger.root:-/home}/${USER_LOGS}/${app.name}/${logger.warn.child:-warn}/${pinpoint.applicationName:-logutil}-warn.log
+        </file>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <Pattern>${defaultPattern}</Pattern>
+            <charset>${log.charset}</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>
+                ${logger.root:-/home}/${USER_LOGS}/${app.name}/${logger.warn.child:-warn}/${pinpoint.applicationName:-logutil}-warn.%d{yyyy-MM-dd}.%i.log.gz
+            </fileNamePattern>
+            <maxHistory>${log.warn.maxHistory:-30}</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>${log.warn.maxFile:-30MB}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+    <appender name="error" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>
+            ${logger.root:-/home}/${USER_LOGS}/${app.name}/${logger.error.child:-error}/${pinpoint.applicationName:-logutil}-error.log
+        </file>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <Pattern>${defaultPattern}</Pattern>
+            <charset>${log.charset}</charset>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>
+                ${logger.root:-/home}/${USER_LOGS}/${app.name}/${logger.error.child:-error}/${pinpoint.applicationName:-logutil}-error.%d{yyyy-MM-dd}.%i.log.gz
+            </fileNamePattern>
+            <maxHistory>${log.error.maxHistory:-30}</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>${log.error.maxFile:-30MB}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+
+    <!--AsyncAppender-->
+    <appender name="async_rolling_debug" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="debug"/>
+        <queueSize>${log.async.queueSize:-256}</queueSize>
+        <discardingThreshold>${log.async.discardingThreshold:-0}</discardingThreshold>
+    </appender>
+    <appender name="async_rolling_info" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="info"/>
+        <queueSize>${log.async.queueSize:-256}</queueSize>
+        <discardingThreshold>${log.async.discardingThreshold:-0}</discardingThreshold>
+    </appender>
+    <appender name="async_rolling_info_upper" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="info_upper"/>
+        <queueSize>${log.async.queueSize:-256}</queueSize>
+        <discardingThreshold>${log.async.discardingThreshold:-0}</discardingThreshold>
+    </appender>
+    <appender name="async_rolling_warn" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="warn"/>
+        <queueSize>${log.async.queueSize:-256}</queueSize>
+        <discardingThreshold>${log.async.discardingThreshold:-0}</discardingThreshold>
+    </appender>
+    <appender name="async_rolling_error" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="error"/>
+        <queueSize>${log.async.queueSize:-256}</queueSize>
+        <discardingThreshold>${log.async.discardingThreshold:-0}</discardingThreshold>
+    </appender>
+    <appender name="async_rolling_exception" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="exception"/>
+        <queueSize>${log.async.queueSize:-256}</queueSize>
+        <discardingThreshold>${log.async.discardingThreshold:-0}</discardingThreshold>
+    </appender>
+
+    <!--jstorm.my-logback.xml start-->
+    <appender name="A1" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${jstorm.log.dir}/${topology.name:-.}/${logfile.name}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${jstorm.log.dir}/${topology.name:-.}/${logfile.name}.%i</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>5</maxIndex>
+        </rollingPolicy>
+
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>1GB</maxFileSize>
+        </triggeringPolicy>
+
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>[%p %d{yyyy-MM-dd HH:mm:ss} %c{1}:%L %t] %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="METRICS" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${jstorm.log.dir}/${topology.name:-.}/${logfile.name}.metrics</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${jstorm.log.dir}/${topology.name:-.}/${logfile.name}.metrics.%i</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>5</maxIndex>
+        </rollingPolicy>
+
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>100MB</maxFileSize>
+        </triggeringPolicy>
+
+        <encoder>
+            <charset>UTF-8</charset>
+            <!--<pattern>[%p %d{yyyy-MM-dd HH:mm:ss} %c{1}:%L %t] %m%n</pattern>-->
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss} %t] %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="org.apache.zookeeper" level="ERROR">
+        <appender-ref ref="A1"/>
+    </logger>
+    <logger name="org.apache.curator" level="ERROR">
+        <appender-ref ref="A1"/>
+    </logger>
+    <logger name="com.netflix.curator" level="ERROR">
+        <appender-ref ref="A1"/>
+    </logger>
+    <logger name="backtype.storm.utils.StormBoundedExponentialBackoffRetry" level="ERROR">
+        <appender-ref ref="A1"/>
+    </logger>
+    <logger name="shade.storm.org.apache.zookeeper" level="ERROR">
+        <appender-ref ref="A1"/>
+    </logger>
+    <logger name="shade.storm.org.apache.curator" level="ERROR">
+        <appender-ref ref="A1"/>
+    </logger>
+
+    <logger name="com.alibaba.jstorm" additivity="false">
+        <level value="INFO"/>
+        <appender-ref ref="A1"/>
+    </logger>
+    <logger name="com.alibaba.jstorm.daemon.worker.hearbeat" additivity="false">
+        <level value="WARN"/>
+        <appender-ref ref="A1"/>
+    </logger>
+    <logger name="com.alibaba.jstorm.task.heartbeat" additivity="false">
+        <level value="WARN"/>
+        <appender-ref ref="A1"/>
+    </logger>
+
+    <logger name="com.alibaba.jstorm.task.master.heartbeat" additivity="false">
+        <level value="INFO"/>
+        <appender-ref ref="METRICS"/>
+    </logger>
+
+    <logger name="com.alibaba.jstorm.common.metric" additivity="false">
+        <level value="INFO"/>
+        <appender-ref ref="METRICS"/>
+    </logger>
+
+    <logger name="com.alibaba.jstorm.task.master.metrics" additivity="false">
+        <level value="INFO"/>
+        <appender-ref ref="METRICS"/>
+    </logger>
+
+    <logger name="com.alibaba.jstorm.daemon.nimbus.metric" additivity="false">
+        <level value="INFO"/>
+        <appender-ref ref="METRICS"/>
+    </logger>
+
+    <logger name="com.alibaba.jstorm.metric" additivity="false">
+        <level value="INFO"/>
+        <appender-ref ref="METRICS"/>
+    </logger>
+    <logger name="com.alibaba.jstorm.ots" additivity="false">
+        <level value="INFO"/>
+        <appender-ref ref="METRICS"/>
+    </logger>
+    <logger name="com.alibaba.jstorm.hbase" additivity="false">
+        <level value="INFO"/>
+        <appender-ref ref="METRICS"/>
+    </logger>
+    <logger name="com.alibaba.jstorm.task.master.heartbeat.TaskHeartbeatUpdater" additivity="false">
+        <level value="INFO"/>
+        <appender-ref ref="METRICS"/>
+    </logger>
+    <!--jstorm.my-logback.xml end-->
+
+    <!--项目日志-->
+    <logger name="cst.jstorm"/>
+
+
+    <root level="${log.level}">
+        <!--测试，开发环境需要打印日志 jvm环境变量-Dlogback.env=dev -->
+        <if condition='property("logback.env").contains("dev")'>
+            <then>
+                <appender-ref ref="stdout"/>
+                <appender-ref ref="async_rolling_debug"/>
+
+            </then>
+        </if>
+        <if condition='"${logback.depart}".contains("yes")'>
+            <then>
+                <appender-ref ref="async_rolling_info"/>
+                <appender-ref ref="async_rolling_exception"/>
+                <appender-ref ref="async_rolling_warn"/>
+                <appender-ref ref="async_rolling_error"/>
+            </then>
+            <else>
+                <appender-ref ref="async_rolling_info_upper"/>
+            </else>
+
+        </if>
+    </root>
+
+
+</configuration>

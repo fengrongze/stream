@@ -1,0 +1,96 @@
+server:
+  port: 8088
+hbase:
+  zkQuorum: bigdata1.com,bigdata2.com,bigdata3.com
+  zkPort: 2181
+  rootDir:
+  zkDataDir:
+  znodeParent: /hbase-unsecure
+hadoop:
+  hadoopHomeDir: D:\hadoop\hadoop-2.6.5
+  hadoopCoreFile:
+    - hadoop/core-site.xml
+    - hadoop/mapred-site.xml
+    - hadoop/yarn-site.xml
+    - hadoop/hdfs-site.xml
+  crossPlatform: true
+  ubertask: true
+mybatis:
+  mapperLocations: classpath:mybatis/mapper/*.xml
+  typeAliasesPackage: com.cst.bigdata.domain.mybatis
+  myName: xiaoq
+spring:
+  hadoop:
+      config:
+        fs.defaultFS: hdfs://cstdevcluster:9000
+  datasource:
+    name: dev
+    url: jdbc:mysql://172.16.4.12:3306/stream?useUnicode=true&characterEncoding=UTF-8
+    username: root
+    password: cst2008
+    # 使用druid数据源
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    filters: stat #配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+    maxActive: 20 #最大连接
+    initialSize: 1 #初始连接
+    maxWait: 60000 #配置获取连接等待超时的时间
+    minIdle: 1 #最小空闲连接
+    timeBetweenEvictionRunsMillis: 60000 #配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+    minEvictableIdleTimeMillis: 300000 #配置一个连接在池中最小生存的时间，单位是毫秒
+    validationQuery: select 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true #打开PSCache，并且指定每个连接上PSCache的大小20
+    maxOpenPreparedStatements: 20
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+  pageSizeZero: true
+  rowBoundsWithCount: false
+swagger:
+  description: xuexiwenjian
+  version: 1.0.0
+  license: Apache License, Version 2.0
+  licenseUrl: https://www.apache.org/licenses/LICENSE-2.0.html
+  terms-of-service-url: http://localhost:8088/swagger-ui.html
+  base-package: com.cst.bigdata
+  docket:
+    xiaoq:
+      title: group-a
+      version: 1.0.0
+file:
+  startTime: 2018-04-20
+  stopTime: 2018-04-23
+  filePath:
+  fileName:
+  outPath: C:\\Users\\admin\\Desktop\\temp\\test
+
+myrediscluster:
+  hosts: 172.16.131.58:7000,172.16.131.58:7001,172.16.131.58:7002,172.16.131.58:7003,172.16.131.58:7004,172.16.131.58:7005
+  maxTotal: 200
+  maxIdle: 40
+  minIdle: 10
+  timeout: 4000
+  maxRedirections: 5
+dubbo:
+  application:
+    name: hourstat-consumer
+    owner: programmer
+    organization: cst
+  registry:
+    #注册zookeeper的地址
+    address: zookeeper://172.16.132.176:2181
+    group: cmds_hfrq_provider
+  annotation:
+    package: com.cst.bigdata.service
+  protocol:
+    #协议 (有 dubbo、rest、http、hessian、webservice)
+    name: dubbo
+    port: 20880
+bigdao:
+  gdcpFactoryClientSystem: data_validate
+  gdcpFactoryClientProxyUrl: 172.16.132.176:2181,172.16.132.177:2181,172.16.132.178:2181

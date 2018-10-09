@@ -1,0 +1,3 @@
+server:
+  connection-timeout: 5000
+  uri-encoding: UTF-8

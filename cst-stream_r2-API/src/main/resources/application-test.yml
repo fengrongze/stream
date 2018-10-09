@@ -1,0 +1,89 @@
+server:
+  port: 8088
+hbase:
+  zkQuorum: zookeeper01,zookeeper02,zookeeper03
+  zkPort: 2181
+  rootDir: hdfs://hadoop01:9000/hbase
+  zkDataDir:
+hadoop:
+  hadoopHomeDir: D:\hadoop\hadoop-2.6.5
+  hadoopCoreFile:
+    - hadoop/core-site.xml
+    - hadoop/mapred-site.xml
+    - hadoop/yarn-site.xml
+    - hadoop/hdfs-site.xml
+  crossPlatform: true
+  ubertask: true
+mybatis:
+  mapperLocations: classpath:mybatis/mapper/*.xml
+  typeAliasesPackage: com.cst.bigdata.domain.mybatis
+spring:
+  hadoop:
+      config:
+        fs.defaultFS: hdfs://hadoop01:9000/hbase
+  datasource:
+    name: dev
+    url: jdbc:mysql://172.16.132.196:3306/base_stream?useUnicode=true&characterEncoding=UTF-8
+    username: iov_read
+    password: iov_read
+    # 使用druid数据源
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    filters: stat
+    maxActive: 20
+    initialSize: 1
+    maxWait: 60000
+    minIdle: 1
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: select 'x'
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    maxOpenPreparedStatements: 20
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+  pageSizeZero: true
+  rowBoundsWithCount: false
+swagger:
+  description: xuexiwenjian
+  version: 1.0.0
+  license: Apache License, Version 2.0
+  licenseUrl: https://www.apache.org/licenses/LICENSE-2.0.html
+  terms-of-service-url: http://localhost:8088/swagger-ui.html
+  base-package: com.cst.bigdata
+  docket:
+    xiaoq:
+      title: group-a
+      version: 1.0.0
+
+myrediscluster:
+  hosts: 172.16.131.58:7000,172.16.131.58:7001,172.16.131.58:7002,172.16.131.58:7003,172.16.131.58:7004,172.16.131.58:7005
+  maxTotal: 200
+  maxIdle: 40
+  minIdle: 10
+  timeout: 4000
+  maxRedirections: 5
+dubbo:
+  application:
+    name: hourstat-consumer
+    owner: programmer
+    organization: cst
+  registry:
+    #注册zookeeper的地址
+    address: zookeeper://172.16.132.176:2181
+    group: cmds_hfrq_provider
+  annotation:
+    package: com.cst.bigdata.service
+  protocol:
+    #协议 (有 dubbo、rest、http、hessian、webservice)
+    name: dubbo
+    port: 20880
+bigdao:
+  gdcpFactoryClientSystem: data_validate
+  gdcpFactoryClientProxyUrl: 172.16.132.176:2181,172.16.132.177:2181,172.16.132.178:2181
+

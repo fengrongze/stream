@@ -1,0 +1,721 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.cst.stream</groupId>
+    <artifactId>cst-stream_r2-API</artifactId>
+    <version>1.1.1</version>
+    <packaging>jar</packaging>
+
+    <name>cst-stream_r2-API</name>
+    <url>http://maven.apache.org</url>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <junit.version>4.12</junit.version>
+        <spring-boot.version>1.5.8.RELEASE</spring-boot.version>
+        <spring-cloud.version>Dalston.SR4</spring-cloud.version>
+        <spring.hadoop.version>2.5.0.RELEASE</spring.hadoop.version>
+        <hadoop.common.version>2.6.5</hadoop.common.version>
+        <hbase.version>1.3.1</hbase.version>
+        <!--<hadoop.common.version>3.0.0-alpha4</hadoop.common.version>
+        <hbase.version>1.2.6</hbase.version>-->
+        <mvn.surefire.version>2.19.1</mvn.surefire.version>
+        <mvn.compiler.version>3.2</mvn.compiler.version>
+        <springfox-swagger.version>2.6.1</springfox-swagger.version>
+        <curator-recipes.version>2.6.0</curator-recipes.version>
+        <springforall-swagger.version>1.5.1.RELEASE</springforall-swagger.version>
+        <mysql-connector-java.version>5.1.44</mysql-connector-java.version>
+        <spring-boot-starter-redis.version>1.4.7.RELEASE</spring-boot-starter-redis.version>
+        <mybatis-spring-boot-starter.version>1.3.1</mybatis-spring-boot-starter.version>
+        <mybatis.generator.version>1.3.5</mybatis.generator.version>
+        <mybatis.version>3.4.1</mybatis.version>
+        <cst_config.version>0.0.4-SNAPSHOT</cst_config.version>
+        <maven-resources-plugin.version>2.7</maven-resources-plugin.version>
+        <lombok.version>1.16.16</lombok.version>
+        <start-class>com.cst.bigdata.BigdataHbaseApplication</start-class>
+        <logback.version>1.2.3</logback.version>
+        <ali.druid.version>1.0.26</ali.druid.version>
+        <slf4j.api.version>1.7.25</slf4j.api.version>
+        <servlet.api.version>3.1.0</servlet.api.version>
+        <maven-resources-plugin.version>2.7</maven-resources-plugin.version>
+        <janino.version>3.0.7</janino.version>
+        <jdk.version>1.8</jdk.version>
+        <guava.version>16.0.1</guava.version>
+        <lombok.version>1.16.16</lombok.version>
+        <curator_framework.version>2.6.0</curator_framework.version>
+        <gdcp.cdi.version>3.23.0</gdcp.cdi.version>
+        <cst-stream.models.version>1.1.2</cst-stream.models.version>
+        <cst-stream.commons.version>1.1.2</cst-stream.commons.version>
+        <big.dao.client.version>3.6.5</big.dao.client.version>
+        <!--该项目 在私库中不存在jar，需要将相应的jar导入到本地仓库-->
+        <gdcp.proxy.version>1.1.0</gdcp.proxy.version>
+        <dubbo.version>2.8.3</dubbo.version>
+        <zkclient.version>0.10</zkclient.version>
+        <cmds.hfrq.version>3.6.0-SNAPSHOT</cmds.hfrq.version>
+        <fastjson.version>1.2.47</fastjson.version>
+        <springmvc.swagger.version>1.1.2.RELEASE</springmvc.swagger.version>
+        <springfox.staticdoc.version>2.6.1</springfox.staticdoc.version>
+        <swagger.markup.version>1.3.2</swagger.markup.version>
+        <!--doc 生成-->
+        <snippetsDirectory>${project.build.directory}/generated-snippets</snippetsDirectory>
+
+        <asciidoctor.input.directory>${project.basedir}/docs/asciidoc</asciidoctor.input.directory>
+        <generated.asciidoc.directory>${project.build.directory}/asciidoc</generated.asciidoc.directory>
+        <asciidoctor.html.output.directory>${project.build.directory}/asciidoc/html</asciidoctor.html.output.directory>
+        <asciidoctor.pdf.output.directory>${project.build.directory}/asciidoc/pdf</asciidoctor.pdf.output.directory>
+
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jetty</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+            <version>${spring-boot.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>${mybatis-spring-boot-starter.version}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-logging -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>
+            <version>${spring-boot.version}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/junit/junit -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.springframework.data/spring-data-hadoop -->
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-hadoop</artifactId>
+            <version>${spring.hadoop.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-context-support</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>servlet-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.hadoop/hadoop-common -->
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-common</artifactId>
+            <version>${hadoop.common.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>servlet-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>javax.servlet-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava</artifactId>
+                </exclusion>
+                <!--<exclusion>
+                    <groupId>org.apache.curator</groupId>
+                    <artifactId>curator-framework</artifactId>
+                </exclusion>-->
+
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.curator</groupId>
+            <artifactId>curator-framework</artifactId>
+            <version>${curator_framework.version}</version>
+        </dependency>
+
+
+        <!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${servlet.api.version}</version>
+            <!--<scope>provided</scope>-->
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.hbase/hbase-client -->
+        <dependency>
+            <groupId>org.apache.hbase</groupId>
+            <artifactId>hbase-client</artifactId>
+            <version>${hbase.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>servlet-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${springfox-swagger.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${springfox-swagger.version}</version>
+        </dependency>
+        <!--<dependency>
+            <groupId>com.spring4all</groupId>
+            <artifactId>spring-boot-starter-swagger</artifactId>
+            <version>${springforall-swagger.version}</version>
+        </dependency>-->
+
+        <dependency>
+            <groupId>org.apache.curator</groupId>
+            <artifactId>curator-recipes</artifactId>
+            <version>${curator-recipes.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <!--MG依赖 -->
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>${mybatis.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis.generator</groupId>
+            <artifactId>mybatis-generator-core</artifactId>
+            <version>${mybatis.generator.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis.generator</groupId>
+            <artifactId>mybatis-generator-maven-plugin</artifactId>
+            <version>${mybatis.generator.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <version>RELEASE</version>
+        </dependency>
+        <!--druid数据库连接池 -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+            <version>${ali.druid.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.101tec</groupId>
+            <artifactId>zkclient</artifactId>
+            <version>${zkclient.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.api.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
+            <!--<scope>test</scope>-->
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-core -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>${logback.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-access -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-access</artifactId>
+            <version>${logback.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.codehaus.janino/janino -->
+        <dependency>
+            <groupId>org.codehaus.janino</groupId>
+            <artifactId>janino</artifactId>
+            <version>${janino.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.cst.config</groupId>
+            <artifactId>config-client</artifactId>
+            <version>${cst_config.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.curator</groupId>
+                    <artifactId>curator-recipes</artifactId>
+                </exclusion>
+
+            </exclusions>
+        </dependency>
+        <!--自建api解析-->
+        <dependency>
+            <groupId>com.cst.stream</groupId>
+            <artifactId>cst-stream_r2-models</artifactId>
+            <version>${cst-stream.models.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.cst.stream</groupId>
+            <artifactId>cst-stream_r2_commons</artifactId>
+            <version>${cst-stream.commons.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.cst.gdcp</groupId>
+            <artifactId>gdcp-cdi</artifactId>
+            <version>${gdcp.cdi.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.cst.base.ds</groupId>
+            <artifactId>big-dao-client</artifactId>
+            <version>${big.dao.client.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.curator</groupId>
+                    <artifactId>curator-recipes</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.cst.base</groupId>
+            <artifactId>gdcp-proxy-client</artifactId>
+            <version>${gdcp.proxy.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.zookeeper</groupId>
+                    <artifactId>zookeeper</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.curator</groupId>
+                    <artifactId>curator-recipes</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.cst.gdcp</groupId>
+                    <artifactId>gdcp-di</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.cst.base</groupId>
+            <artifactId>gdcp-proxy-common</artifactId>
+            <version>${gdcp.proxy.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>dubbo</artifactId>
+            <version>${dubbo.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-beans</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-expression</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-aop</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-context</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.cst</groupId>
+            <artifactId>cst-cmds-hfrq-api</artifactId>
+            <version>${cmds.hfrq.version}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${fastjson.version}</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.springframework.restdocs</groupId>
+            <artifactId>spring-restdocs-mockmvc</artifactId>
+            <version>${springmvc.swagger.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-staticdocs</artifactId>
+            <version>${springfox.staticdoc.version}</version>
+        </dependency>
+
+        <!--<dependency>
+            <groupId>io.github.swagger2markup</groupId>
+            <artifactId>swagger2markup</artifactId>
+            <version>${swagger.markup.version}</version>
+        </dependency>
+-->
+        <!--<dependency>
+            <groupId>io.github.swagger2markup</groupId>
+            <artifactId>swagger2markup-extension-commons</artifactId>
+            <version>${swagger.markup.version}</version>
+        </dependency>-->
+        <!--<dependency>
+            <groupId>nl.jworks.markdown_to_asciidoc</groupId>
+            <artifactId>markdown_to_asciidoc</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.netzwerg</groupId>
+            <artifactId>paleo-core</artifactId>
+            <version>0.11.0</version>
+        </dependency>-->
+        <!--<dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-models</artifactId>
+            <version>1.5.18</version>
+        </dependency>-->
+    </dependencies>
+
+
+    <distributionManagement>
+        <repository>
+            <id>cst-nexus-releases</id>
+            <url>http://172.16.1.205:8081/nexus/content/repositories/releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>cst-nexus-snapshots</id>
+            <url>http://172.16.1.205:8081/nexus/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+              <groupId>org.springframework.cloud</groupId>
+              <artifactId>spring-cloud-dependencies</artifactId>
+              <version>${spring-cloud.version}</version>
+              <type>pom</type>
+              <scope>import</scope>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>${start-class}</mainClass>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <version>${spring-boot.version}</version>
+                    </dependency>
+                </dependencies>
+                <version>2.4.3</version>
+                <configuration>
+                    <keepDependenciesWithProvidedScope>true</keepDependenciesWithProvidedScope>
+                    <createDependencyReducedPom>true</createDependencyReducedPom>
+                    <filters>
+                        <filter>
+                            <artifact>*:*</artifact>
+                            <excludes>
+                                <exclude>META-INF/*.SF</exclude>
+                                <exclude>META-INF/*.DSA</exclude>
+                                <exclude>META-INF/*.RSA</exclude>
+                            </excludes>
+                        </filter>
+                    </filters>
+                </configuration>
+                <executions>
+                    <execution>
+                        <!--将 goal shade:shade 绑定到 phase package 上-->
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+
+                        <configuration>
+                            <!--<keepDependenciesWithProvidedScope>true</keepDependenciesWithProvidedScope>
+                            <createDependencyReducedPom>true</createDependencyReducedPom>-->
+                            <filters>
+                                <filter>
+                                    <artifact>junit:junit</artifact>
+                                    <excludes>
+                                        <exclude>org/junit/experimental/**</exclude>
+                                        <exclude>org/junit/runners/**</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>org.slf4j:slf4j-log4j12</artifact>
+                                    <excludes>
+                                        <exclude>org/**</exclude>
+                                    </excludes>
+                                </filter>
+
+                            </filters>
+                            <!--自动将所有不使用的类全部排除掉，将 uber-jar 最小化-->
+                            <minimizeJar>true</minimizeJar>
+                            <!--配置结尾的jar的后缀-->
+                            <shadedArtifactAttached>true</shadedArtifactAttached>
+                            <shadedClassifierName>stream.hbase</shadedClassifierName> <!-- Any name that makes sense -->
+
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>META-INF/spring.handlers</resource>
+                                </transformer>
+                                <transformer implementation="org.springframework.boot.maven.PropertiesMergingResourceTransformer">
+                                    <resource>META-INF/spring.factories</resource>
+                                </transformer>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>META-INF/spring.schemas</resource>
+                                </transformer>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                                <!--配置执行的main class-->
+                                <!--<transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>${start-class}</mainClass>
+                                </transformer>-->
+                            </transformers>
+
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${mvn.compiler.version}</version>
+                <configuration>
+                    <source>${jdk.version}</source>
+                    <compilerVersion>${jdk.version}</compilerVersion>
+                    <target>${jdk.version}</target>
+                    <compilerArgument>-Xlint:all</compilerArgument>
+                    <showWarnings>true</showWarnings>
+                    <showDeprecation>true</showDeprecation>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${mvn.surefire.version}</version>
+                <configuration>
+                    <includes>
+                        <include>**/test/domain/*RepositoryTest.java</include>
+                    </includes>
+                    <systemPropertyVariables>
+                        <hadoop.home.dir>D:/hadoop/hadoop-2.6.5</hadoop.home.dir>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+            <!--MG的插件 -->
+            <plugin>
+                <groupId>org.mybatis.generator</groupId>
+                <artifactId>mybatis-generator-maven-plugin</artifactId>
+                <version>${mybatis.generator.version}</version>
+                <configuration>
+                    <verbose>true</verbose>
+                    <overwrite>true</overwrite>
+                    <configurationFile>src/test/resources/mybatis-generator.xml</configurationFile>
+                    <overwrite>true</overwrite>
+                </configuration>
+                <dependencies>
+                    <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java 配置这个依赖主要是为了等下在配置MG的时候可以不用配置classPathEntry这样的一个属性，避免
+                        代码的耦合度太高 -->
+                    <dependency>
+                        <groupId>mysql</groupId>
+                        <artifactId>mysql-connector-java</artifactId>
+                        <version>${mysql-connector-java.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
+            <!--Maven通过Maven Surefire Plugin插件执行单元测试-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.19.1</version>
+            </plugin>
+            <!-- Run the generated asciidoc through Asciidoctor to generate
+                 other documentation types, such as PDFs or HTML5 -->
+            <!--通过Asciidoctor使得asciidoc生成其他的文档格式，例如：PDF 或者HTML5-->
+            <plugin>
+                <groupId>org.asciidoctor</groupId>
+                <artifactId>asciidoctor-maven-plugin</artifactId>
+                <version>1.5.3</version>
+                <!-- Include Asciidoctor PDF for pdf generation -->
+                <!--生成PDF-->
+                <dependencies>
+                    <dependency>
+                        <groupId>org.asciidoctor</groupId>
+                        <artifactId>asciidoctorj-pdf</artifactId>
+                        <version>1.5.0-alpha.14</version>
+                    </dependency>
+                    <!-- Comment this section to use the default jruby artifact provided by the plugin -->
+                    <dependency>
+                        <groupId>org.jruby</groupId>
+                        <artifactId>jruby-complete</artifactId>
+                        <version>1.7.21</version>
+                    </dependency>
+                </dependencies>
+
+                <!-- Configure generic document generation settings -->
+                <!--文档生成配置-->
+                <configuration>
+                    <sourceDirectory>${asciidoctor.input.directory}</sourceDirectory>
+                    <sourceDocumentName>index.adoc</sourceDocumentName>
+                    <attributes>
+                        <doctype>book</doctype>
+                        <toc>left</toc>
+                        <toclevels>3</toclevels>
+                        <numbered></numbered>
+                        <hardbreaks></hardbreaks>
+                        <sectlinks></sectlinks>
+                        <sectanchors></sectanchors>
+                        <generated>${generated.asciidoc.directory}</generated>
+                    </attributes>
+                </configuration>
+                <!-- Since each execution can only handle one backend, run
+                   separate executions for each desired output type -->
+                <!--因为每次执行只能处理一个后端，所以对于每个想要的输出类型，都是独立分开执行-->
+                <executions>
+                    <!--html5-->
+                    <execution>
+                        <id>output-html</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>process-asciidoc</goal>
+                        </goals>
+                        <configuration>
+                            <backend>html5</backend>
+                            <outputDirectory>${asciidoctor.html.output.directory}</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <!--pdf-->
+                    <execution>
+                        <id>output-pdf</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>process-asciidoc</goal>
+                        </goals>
+                        <configuration>
+                            <backend>pdf</backend>
+                            <outputDirectory>${asciidoctor.pdf.output.directory}</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

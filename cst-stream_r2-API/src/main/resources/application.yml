@@ -1,0 +1,27 @@
+banner:
+  charset: UTF-8
+server:
+  tomcat:
+    uri-encoding: UTF-8
+spring:
+  output:
+    ansi:
+      enabled: DETECT
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  messages:
+    encoding: UTF-8
+  profiles:
+    active: test
+  application:
+      name: demo-for-hbase
+logging:
+    config: classpath:logback-spring.xml
+    path: /home
+    level:
+      org.springfromework.web: info
+      com.cst.bigdata.service: debug
+

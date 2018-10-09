@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License. See accompanying LICENSE file.
+-->
+
+<!-- Put site-specific property overrides in this file. -->
+
+<configuration>
+<!--指定namenode名称空间的存储地址-->
+<property>
+<name>dfs.namenode.name.dir</name>
+<value>file:///usr/hadoop/data/storage/hdfs/name-${user.name}</value>
+</property>
+
+<!--指定datanode数据存储地址-->
+<property>
+<name>dfs.datanode.data.dir</name>
+<value>file:///usr/hadoop/data/storage/hdfs/data-${user.name}</value>
+</property>
+
+<!--指定数据冗余份数-->
+<property>
+<name>dfs.replication</name>
+<value>3</value>
+<description>Default block replication. 
+The actual number of replications can be specified when the file is created.
+The default is used if replication is not specified in create time.
+</description>
+</property>
+
+<property>
+<name>dfs.permissions.enabled</name>
+<value>false</value>
+<description>
+If "true", enable permission checking in HDFS.
+If "false", permission checking is turned off,
+but all other behavior is unchanged.
+Switching from one parameter value to the other does not change the mode,
+owner or group of files or directories.
+</description>
+</property>
+<property>
+<name>dfs.cluster.administrators</name>
+<value>user1</value>
+</property>
+<!--指定hdfs的nameservice为appcluster，需要和core-site.xml中的保持一致 -->
+<property>
+<name>dfs.nameservices</name>
+<value>cstdevcluster</value>
+</property>
+<!-- cstdevcluster（逻辑名）下面有两个NameNode，分别是nn1，nn2 -->
+<property>
+  <name>dfs.ha.namenodes.cstdevcluster</name>
+  <value>nn1,nn2</value>
+  <description>
+    The prefix for a given nameservice, contains a comma-separated
+    list of namenodes for a given nameservice (eg EXAMPLENAMESERVICE).
+  </description>
+</property>
+<!-- nn1的RPC通信地址 -->
+<property>
+  <name>dfs.namenode.rpc-address.cstdevcluster.nn1</name>
+  <value>bigdata1:9000</value>
+  <description>
+    RPC address that handles all clients requests. In the case of HA/Federation where multiple namenodes exist,
+    the name service id is added to the name e.g. dfs.namenode.rpc-address.ns1
+    dfs.namenode.rpc-address.EXAMPLENAMESERVICE
+    The value of this property will take the form of nn-host1:rpc-port.
+  </description>
+</property>
+<!-- nn1的http通信地址 -->
+<property>
+<name>dfs.namenode.http-address.cstdevcluster.nn1</name>
+<value>bigdata1:50070</value>
+</property>
+<!-- nn2的RPC通信地址 -->
+<property>
+  <name>dfs.namenode.rpc-address.cstdevcluster.nn2</name>
+  <value>bigdata2:9000</value>
+  <description>
+    RPC address that handles all clients requests. In the case of HA/Federation where multiple namenodes exist,
+    the name service id is added to the name e.g. dfs.namenode.rpc-address.ns1
+    dfs.namenode.rpc-address.EXAMPLENAMESERVICE
+    The value of this property will take the form of nn-host1:rpc-port.
+  </description>
+</property>
+<!-- nn2的http通信地址 -->
+<property>
+<name>dfs.namenode.http-address.cstdevcluster.nn2</name>
+<value>bigdata2:50070</value>
+</property>
+
+<!-- 开启NameNode失败自动切换 -->
+<property>
+<name>dfs.ha.automatic-failover.enabled</name>
+<value>true</value>
+</property>
+
+<!-- 指定NameNode的edits元数据在JournalNode上的存放位置 -->
+<property>
+<name>dfs.namenode.shared.edits.dir</name>
+<value>qjournal://bigdata1:8485;bigdata2:8485;bigdata3:8485;bigdata4:8485;bigdata5:8485/cstdevcluster</value>
+</property>
+<!-- 指定JournalNode在本地磁盘存放数据的位置 -->
+<property>
+<name>dfs.journalnode.edits.dir</name>
+<value>/usr/hadoop/journal/journal-${user.name}</value>
+</property>
+<!-- 配置失败自动切换实现方式 -->
+<property>
+<name>dfs.client.failover.proxy.provider.cstdevcluster</name>
+<value>org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider</value>
+</property>
+
+<!-- 配置隔离机制方法，多个机制用换行分割，即每个机制暂用一行-->
+<property>
+<name>dfs.ha.fencing.methods</name>
+<value>sshfence
+shell(/bin/true)
+</value>
+</property>
+<!-- 使用sshfence隔离机制时需要ssh免登陆 -->
+<property>
+<name>dfs.ha.fencing.ssh.private-key-files</name>
+<value>/home/user1/.ssh/id_rsa</value>
+</property>
+<!-- 配置sshfence隔离机制超时时间 -->
+<property>
+<name>dfs.ha.fencing.ssh.connect-timeout</name>
+<value>30000</value>
+</property>
+</configuration>
